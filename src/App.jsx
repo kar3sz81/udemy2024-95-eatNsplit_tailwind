@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+{/*
 const datas=[
   {name:'judit',
     avatar:'https://i.pravatar.cc/48',
@@ -25,10 +26,27 @@ const datas=[
     avatar:'https://i.pravatar.cc/48',
     id:5
   },
-]
+]*/}
 
 function App() {
-  datas.map(data=>console.log(data))
+
+  const[friendName,setFriendName]=useState("")
+
+  //console.log(friendName)
+
+  const [datas,setDatas]=useState([])
+
+  const datasURL= 'https://i.pravatar.cc/48'
+
+  
+
+  function addItem(e){
+    const newData={name:friendName,avatar:datasURL}
+    e.preventDefault();
+    setDatas([...datas,newData])
+    console.log(datas)
+
+  }
 
   return (
     <>
@@ -63,32 +81,32 @@ function App() {
 
                 
               
+              <form className='grid h-[244px] bg-pink-200 shadow-2xl rounded-2xl gap-4 text-2x mt-3' onSubmit={addItem}>
+              
+                                
 
-              <div className='grid h-[244px] bg-pink-200 shadow-2xl rounded-2xl gap-4 text-2x mt-3'>
-                
                   <div className='text-4xl ml-6 mt-4 font-bold'>Adding a Friend</div>
-                
                   <div className='flex justify-between'>
                     <div className='ml-6'>Friend Name?</div>
-                    <input className='bg-blue-100 mr-5' type="text" name="bill" id="bill" />
+                    <input className='bg-blue-100 mr-5' type="text" value={friendName} onChange={e=>setFriendName(e.target.value)}/>
                   </div>
 
                   <div className='flex justify-between'>
                     <div className='ml-6'>Image URL</div>
-                    <input className='bg-blue-100 mr-5' type="text" name="bill" id="bill" value={'https://i.pravatar.cc/48'}/>
+                    <input readOnly className='bg-blue-100 mr-5' type="text" name="bill" id="bill" value={datasURL}/>
                   </div>
 
                   <div className='flex justify-between'>
                     <div>
-                      <button type='button' className='float-right ml-5 bg-blue-300 hover:bg-blue-500 text-blue-950 font-bold rounded w-[153px]'>Close</button>
+                      <button className='float-right ml-5 bg-blue-300 hover:bg-blue-500 text-blue-950 font-bold rounded w-[153px]'>Close</button>
                     </div>
                     <div>
-                      <button type='button' className='float-right mr-5 bg-blue-300 hover:bg-blue-500 text-blue-950 font-bold rounded w-[153px]'>Add Friend</button>
+                      <button className='float-right mr-5 bg-blue-300 hover:bg-blue-500 text-blue-950 font-bold rounded w-[153px]'>Add Friend</button>
                     </div>
                   </div>
-
-              </div>
               
+              </form>
+
           </div>
       
 
