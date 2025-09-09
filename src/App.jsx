@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 {/*
@@ -30,7 +28,12 @@ const datas=[
 
 function App() {
 
-  const[friendName,setFriendName]=useState("")
+  const[activeData,setActiveData]=useState(null)
+  const[friendName,setFriendName]=useState("")//for form typing @addFriend
+
+  const[fullBill,setFullBill]=useState(0)
+  const[myBill,setMyBill]=useState(0)
+  const[kifizet,setKifizet]=useState("me")
 
   //console.log(friendName)
 
@@ -41,9 +44,37 @@ function App() {
   
 
   function addItem(e){
-    const newData={name:friendName,avatar:datasURL}
+    const newData={name:friendName,avatar:datasURL,id:Math.random()*100,balance:0}
     e.preventDefault();
     setDatas([...datas,newData])
+    console.log(datas)
+  }
+
+  function klikk(data){
+    setActiveData(data)
+    console.log(data)
+    console.log(activeData)
+
+  }
+
+    function klikk2(tempData){
+      //activedata balance novelni,
+      //  majd osszehasonlit ID alapjan, es visszairni datas ba:
+      //setDatas(datas.map)
+
+      console.log("tempData elotte:")
+    console.log(tempData)
+      console.log("Datas elotte:")
+    console.log(datas)
+
+    tempData.balance=kifizet=="me"?-1*(fullBill-myBill):fullBill-(fullBill-myBill)
+
+    setDatas(datas.map(data=>(data.id!==tempData.id?data:{...data,balance:tempData.balance})))
+    //(tempdata felulir data)
+
+    console.log("tempData utana:")
+    console.log(tempData)
+    console.log("Datas utana:")
     console.log(datas)
 
   }
@@ -61,9 +92,12 @@ function App() {
 
                     <div className='mr-2 col-span-7'>
                       <div className='text-2xl'>{data.name}</div>
-                      <div className='text-lg'>judit owes you nothing</div>
+                      <div className='text-lg'>
+                        {data.balance==0?`
+                        ${data.name} owes you nothing`
+                        :data.balance>0?`You owes ${data.balance} to ${data.name}`:`${data.name} owes you ${data.balance}`}</div>
                     </div>
-                    <button className='mr-4 float-right bg-red-600 text-amber-300 col-span-3'>selecta</button>
+                    <button onClick={()=>klikk(data)} className='mr-4 float-right bg-red-600 text-amber-300 col-span-3'>selecta</button>
               
                   </li>
                 ))}
@@ -114,41 +148,44 @@ function App() {
 
 
 
-
+          {activeData &&
           <div className='grid h-[344px] bg-blue-300 shadow-2xl rounded-2xl gap-4 text-2x'>
           
-            <div className='text-4xl ml-6 mt-4 font-bold'>Splitting with Judit</div>
+            <div className='text-4xl ml-6 mt-4 font-bold'>Splitting with {activeData.name}</div>
           
             <div className='flex justify-between'>
               <div className='ml-6'>How much was the Bill?</div>
-              <input className='bg-blue-100 w-[153px] mr-5' type="text" name="bill" id="bill" />
+              <input className='bg-blue-100 w-[153px] mr-5' type="text" value={fullBill} onChange={(e)=>setFullBill(Number(e.target.value))} />
             </div>
 
             <div className='flex justify-between'>
-              <div className='ml-6'>How much did u pay?</div>
-              <input className='bg-blue-100 mr-5 w-[153px]' type="text" name="bill" id="bill" />
+              <div className='ml-6'>How much was ur part?</div>
+              <input className='bg-blue-100 mr-5 w-[153px]' type="text" value={myBill} onChange={(e)=>setMyBill(Number(e.target.value))} />
             </div>
 
             <div className='flex justify-between'>
-              <div className='ml-6'>How much did Judit pay?</div>
-              <input disabled className='bg-blue-300 mr-5 read-only w-[153px]' type="text" name="bill" id="bill" />
+              <div className='ml-6'>How much did {activeData.name} pay?</div>
+              <input disabled className='bg-blue-300 mr-5 read-only w-[153px]' type="text" value={fullBill-myBill} />
             </div>
             
             <div className='flex justify-between'>
               <div className='ml-6'>🤑who is paying the Bill?</div>
-              <select className='bg-blue-100 mr-5 w-[153px]'  name="bill" id="bill">
+              <select className='bg-blue-100 mr-5 w-[153px]' value={kifizet} onChange={e=>setKifizet(e.target.value)}>
                   <option value="me">me</option>
-                  <option value="judit">judit</option>
+                  <option value="notme">{activeData.name}</option>
 
               </select>
             </div>
 
             <div>
-            <button type='button' className='float-right mr-5 bg-blue-300 hover:bg-blue-500 text-blue-950 font-bold rounded w-[153px]'>split bill</button>
+            <button onClick={()=>klikk2(activeData)} className='float-right mr-5 bg-blue-300 hover:bg-blue-500 text-blue-950 font-bold rounded w-[153px]'>split bill</button>
             </div>
 
 
           </div>
+          }
+
+
       </div>
      
     </>
